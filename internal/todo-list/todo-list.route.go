@@ -7,5 +7,5 @@ import (
 func RegisterRoutes(r *gin.Engine) {
 	handler := &Handler{}
 
-	r.GET("todo", handler.GetAll)
+	r.GET("/todo", handler.GetAll)
 }
