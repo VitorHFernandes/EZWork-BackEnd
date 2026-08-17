@@ -1,9 +1,9 @@
-package todolist
+package auth
 
 import (
 	"github.com/gin-gonic/gin"
 )
 
 func RegisterRoutes(r *gin.RouterGroup, handler *Handler) {
-	r.GET("/", handler.GetAll)
+	r.POST("/login", handler.Login)
 }

@@ -37,3 +37,31 @@ CREATE TABLE tb_user_job(
 );
 INSERT INTO tb_user_job(user_job_title) VALUES('Software Engineer');
 
+CREATE TABLE tb_sessions (
+    ID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    userID INT UNSIGNED NOT NULL,
+    token_hash CHAR(64) NOT NULL UNIQUE,
+    expiresAt DATETIME NOT NULL,
+
+    INDEX idx_sessions_userID (userID),
+    INDEX idx_sessions_expiresAt (expiresAt)
+);
+
+CREATE VIEW vw_users AS
+  SELECT 
+    u.ID,
+    name,
+    j.user_job_title,
+    jobID,
+    l.userLevel,
+    u.userLevel as userLevelID,
+    email,
+    pass,
+    isActive,
+    createdAt,
+    lastLogin
+  FROM tb_users u
+  LEFT JOIN tb_user_levels l ON u.userLevel = l.ID
+  LEFT JOIN tb_user_job j ON u.jobID = j.ID;
+  
+
