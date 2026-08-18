@@ -49,3 +49,9 @@ func (s *AuthService) Login(email string, pass string) (*LoginResponse, error) {
 		Token: token,
 	}, nil
 }
+
+func (s *AuthService) Logout(token string) error {
+	tokenHash := utils.HashToken(token)
+
+	return s.sessionRepository.DeleteSessionToken(tokenHash)
+}

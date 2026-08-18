@@ -21,3 +21,26 @@ func (r *MySQLSessionRepository) Create(userID uint, tokenHash string, expiresAt
 
 	return err
 }
+
+func (r *MySQLSessionRepository) GetUserIDByTokenHash(tokenHash string) (uint, error) {
+	row := r.db.QueryRow(`
+		SELECT
+			userID 
+		FROM tb_sessions 
+		WHERE token_hash = ? 
+		AND	expiresAt > NOW()
+	`, tokenHash)
+
+	var userID uint
+	if err := row.Scan(&userID); err != nil {
+		return 0, err
+	}
+
+	return userID, nil
+
+}
+
+func (r *MySQLSessionRepository) DeleteSessionToken(tokenHash string) error {
+	_, err := r.db.Exec(`DELETE FROM tb_sessions WHERE token_hash = ?`, tokenHash)
+	return err
+}

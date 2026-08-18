@@ -17,9 +17,23 @@ func NewHandler(service *TodoService) *Handler {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	userID := uint(1)
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"error": "Unauthorized",
+		})
+		return
+	}
 
-	todos, err := h.service.GetTodoList(userID)
+	userIDUint, ok := userID.(uint)
+	if !ok {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"error": "Unauthorized",
+		})
+		return
+	}
+
+	todos, err := h.service.GetTodoList(userIDUint)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),

@@ -62,3 +62,30 @@ func (h *Handler) Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, userResponse)
 }
+
+func (h *Handler) Logout(c *gin.Context) {
+	token, err := c.Cookie("session")
+	if err != nil {
+		c.Status(http.StatusOK)
+		return
+	}
+
+	if err := h.service.Logout(token); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	c.SetCookie(
+		"session",
+		"",
+		-1,
+		"/",
+		"",
+		false,
+		true,
+	)
+
+	c.Status(http.StatusOK)
+}

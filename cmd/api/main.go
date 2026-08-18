@@ -36,6 +36,7 @@ func main() {
 	r := router.New(
 		todoHandler,
 		authHandler,
+		sessionsRepository,
 	)
 
 	if err := r.Run(os.Getenv("API_PORT")); err != nil {
